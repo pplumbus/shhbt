@@ -1,0 +1,180 @@
+using Microsoft.Office.Interop.Excel;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Threading;
+
+namespace Sahibinden_Ilan_Bot
+{
+    internal class Program
+    {
+        public Program()
+        {
+        }
+
+        public static void ClearInput(IWebElement element, IWebDriver driver, string value)
+        {
+            try
+            {
+                IJavaScriptExecutor javaScriptExecutor = (IJavaScriptExecutor)driver;
+                javaScriptExecutor.ExecuteScript(string.Concat("arguments[0].value='", value, "'"), new object[] { element });
+            }
+            catch (Exception exception)
+            {
+            }
+        }
+
+        private static void Main(string[] args)
+        {
+            Console.Title = "Sahibinden Ilan Bot";
+            Application variable = (Application)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("00024500-0000-0000-C000-000000000046")));
+            Workbook variable1 = variable.Workbooks.Open(string.Concat(AppDomain.CurrentDomain.BaseDirectory, "girdi.xlsx"), Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            _Worksheet sheets = (_Worksheet)((dynamic)variable1.Sheets[1]);
+            Range usedRange = sheets.UsedRange;
+            int count = usedRange.Rows.Count;
+            int ınt32 = usedRange.Columns.Count;
+            IWebDriver webDriver = Selenium.Setup();
+            for (int i = 2; i < count + 1; i++)
+            {
+                try
+                {
+                    string empty = string.Empty;
+                    string cells = (string)((dynamic)usedRange.Cells[i, 1]).Value.ToString();
+                    string str = (string)((dynamic)usedRange.Cells[i, 2]).Value.ToString();
+                    string cells1 = (string)((dynamic)usedRange.Cells[i, 3]).Value.ToString();
+                    string str1 = (string)((dynamic)usedRange.Cells[i, 4]).Value.ToString();
+                    string cells2 = (string)((dynamic)usedRange.Cells[i, 5]).Value.ToString();
+                    string str2 = (string)((dynamic)usedRange.Cells[i, 6]).Value.ToString();
+                    string cells3 = (string)((dynamic)usedRange.Cells[i, 7]).Value.ToString();
+                    string str3 = (string)((dynamic)usedRange.Cells[i, 8]).Value.ToString();
+                    string cells4 = (string)((dynamic)usedRange.Cells[i, 9]).Value.ToString();
+                    try
+                    {
+                        empty = (string)((dynamic)usedRange.Cells[i, 10]).Value.ToString();
+                    }
+                    catch
+                    {
+                    }
+                    Selenium.Go("https://banaozel.sahibinden.com/ilan-ver/adim-1/?state=new", webDriver);
+                    Thread.Sleep(2500);
+                    webDriver.FindElement(By.XPath("//li//span[contains(text(),'Otomotiv Ekipmanları')]")).Click();
+                    try
+                    {
+                        webDriver.FindElement(By.XPath("//button[.='Hayır, Yeni Bir İlan Vermek İstiyorum']")).Click();
+                        Thread.Sleep(1000);
+                    }
+                    catch
+                    {
+                    }
+                    webDriver.FindElement(By.XPath("//li//span[contains(text(),'Yedek Parça')]")).Click();
+                    webDriver.FindElement(By.XPath("//li//span[contains(text(),'Otomobil & Arazi Aracı')]")).Click();
+                    webDriver.FindElement(By.XPath(string.Concat("//li//span[contains(text(),'", str, "')]"))).Click();
+                    Thread.Sleep(1500);
+                    Selenium.JSClick(By.XPath("//a[@id='getsizButton']"), webDriver);
+                    Thread.Sleep(2000);
+                    try
+                    {
+                        Selenium.Click(By.CssSelector("body > div.container > div.main-view > div:nth-child(3) > main > div.add-classified.ng-scope > div.ng-scope > div:nth-child(4) > div:nth-child(20) > div.dialog-content.dialog-modern.dialogEffect > div > section > p.dialog-buttons.ng-scope > button"), webDriver);
+                    }
+                    catch
+                    {
+                    }
+                    webDriver.FindElement(By.XPath("//input[@an-form-object-name='İlan Başlığı']")).SendKeys(str1);
+                    IWebElement webElement = webDriver.FindElement(By.XPath("//div[@name='Açıklama']"));
+                    Selenium.ClickElement(webElement, webDriver);
+                    webElement.SendKeys(cells2);
+                    Selenium.ClickElement(webElement, webDriver);
+                    webElement.SendKeys(string.Concat(Keys.Control, "a"));
+                    Thread.Sleep(3000);
+                    Selenium.JSClick(By.XPath("//button[@name='justifyCenter']"), webDriver);
+                    webDriver.FindElement(By.XPath("//input[@an-form-object-name='Fiyat']")).SendKeys(cells3);
+                    try
+                    {
+                        Selenium.SelectByText(By.XPath("//select[@an-form-object-name='Ürün']"), cells1, webDriver);
+                    }
+                    catch
+                    {
+                        SelectElement selectElement = new SelectElement(webDriver.FindElement(By.XPath("//select[@an-form-object-name='Ürün']")));
+                        selectElement.SelectByIndex(1);
+                    }
+                    Selenium.SelectByText(By.XPath("//select[@an-form-object-name='Araç Markası']"), "BMW", webDriver);
+                    Thread.Sleep(1500);
+                    Selenium.SelectByText(By.XPath("//select[@an-form-object-name='Araç Serisi']"), "5 Serisi", webDriver);
+                    try
+                    {
+                        Selenium.SelectByText(By.XPath("//select[@an-form-object-name='Ürün Markası']"), str2, webDriver);
+                    }
+                    catch
+                    {
+                        Selenium.SelectByText(By.XPath("//select[@an-form-object-name='Ürün Markası']"), "Diğer", webDriver);
+                    }
+                    if (!str3.Contains("Evet"))
+                    {
+                        Selenium.SelectByText(By.XPath("//select[@an-form-object-name='Çıkma Yedek Parça']"), "Hayır", webDriver);
+                    }
+                    else
+                    {
+                        Selenium.SelectByText(By.XPath("//select[@an-form-object-name='Çıkma Yedek Parça']"), "Evet", webDriver);
+                    }
+                    if (!cells4.Contains("0"))
+                    {
+                        Selenium.SelectByText(By.XPath("//select[@an-form-object-name='Durumu']"), "İkinci El", webDriver);
+                    }
+                    else
+                    {
+                        Selenium.SelectByText(By.XPath("//select[@an-form-object-name='Durumu']"), "Sıfır", webDriver);
+                    }
+                    Selenium.SelectByText(By.XPath("//select[@an-form-object-name='Takaslı']"), "Hayır", webDriver);
+                    if (empty.Length > 3)
+                    {
+                        string[] strArrays = empty.Split(new char[] { ',' });
+                        for (int j = 0; j < (int)strArrays.Length; j++)
+                        {
+                            string str4 = strArrays[j];
+                            try
+                            {
+                                IWebElement webElement1 = webDriver.FindElement(By.XPath("//input[@id='uploadImageField']"));
+                                webElement1.SendKeys(string.Concat(AppDomain.CurrentDomain.BaseDirectory, "resimler/", str4));
+                                Thread.Sleep(2000);
+                                Program.ClearInput(webElement1, webDriver, "");
+                                Thread.Sleep(500);
+                            }
+                            catch
+                            {
+                            }
+                        }
+                        Thread.Sleep(3000);
+                    }
+                    if (!webDriver.FindElement(By.XPath("//input[@id='autoPublishAuction']")).GetAttribute("class").Equals("sg-checkbox ng-valid ng-dirty ng-valid-parse ng-touched ng-not-empty"))
+                    {
+                        Selenium.JSClick(By.XPath("//input[@id='autoPublishAuction']"), webDriver);
+                    }
+                    Selenium.JSClick(By.XPath("//input[@id='postRulesCheck']"), webDriver);
+                    Thread.Sleep(2000);
+                    Selenium.JSClick(By.XPath("//button[@class='add-classified-submit btn btn-strong']"), webDriver);
+                    Thread.Sleep(3000);
+                    Selenium.JSClick(By.XPath("//button[.='Devam Et']"), webDriver);
+                    Thread.Sleep(1000);
+                    Selenium.JSClick(By.XPath("//button[.='Devam Et']"), webDriver);
+                    Selenium.JSClick(By.XPath("/html/body/div[1]/div[1]/div[2]/main/div[1]/div[2]/div[1]/div[3]/div/a"), webDriver);
+                    Selenium.JSClick(By.XPath("//button[.='Devam Et']"), webDriver);
+                    Thread.Sleep(3000);
+                    Log.Success(string.Concat("Ilan basariyla girildi: ", i.ToString()));
+                    Thread.Sleep(int.Parse(Helper.Setting("Bekleme")) * 1000);
+                }
+                catch (Exception exception1)
+                {
+                    Exception exception = exception1;
+                    Log.Error(string.Concat("Islem basarisiz: ", i.ToString()));
+                    Helper.Save(exception.ToString(), "logs.txt");
+                    goto Label0;
+                }
+            Label0:
+            }
+            webDriver.Quit();
+            Log.Info("Islemler tamamlandi.");
+            Console.ReadKey();
+        }
+    }
